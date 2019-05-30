@@ -1,4 +1,5 @@
 #J'essaie de faire un programme qui simule un jeu de cartes pour faire des recherches sur le memdeck
+#test de git
 import random
 import itertools
 from typing import List
