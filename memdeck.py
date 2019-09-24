@@ -3,6 +3,8 @@
 import random
 import itertools
 from typing import List
+import inspect
+from collections import Counter
 
 
 class Card:
@@ -13,6 +15,10 @@ class Card:
     def __repr__(self) -> str:
       return f"{self.value} of {self.suit}"
 
+    # def __eq__(self, other): 
+    #     if not isinstance(other, Card):
+    #     # don't attempt to compare against unrelated types
+    #      return NotImplemented
 
 class Deck:
     def __init__(self, cards: List[Card]) -> None:
@@ -44,19 +50,66 @@ class Deck:
             packet.append(card)
         return packet
     
-    def dealIntoPiles(self,cards,piles):
+    def dealIntoPiles(self,cards: int, piles: int):
         piles = [[] for n in range(piles)]
 
         for _ in range(cards):
             for pile in piles:
                 pile.append(self.cards.pop(0))
         return piles
+    
+    def findFourOfAKindPositions(self,value:str):
+        positions = []
+        for card in self.cards:
+            if value == card.value:
+                positions.append(card)
+        return positions
 
+    def locateAllSuit(self, suit:str):
+        positions = []
+        for card in self.cards:
+            if suit == card.suit:
+                positions.append(card)
+        return positions
+
+    def locateAllColor(self, color:str):
+        positions = []
+        if color == "red":
+            for card in self.cards:
+                if card.suit == "hearts":
+                    positions.append(card)
+                if card.suit == "diamonds":
+                    positions.append(card)
+        if color == "black":
+            for card in self.cards:
+                if card.suit == "hearts":
+                    positions.append(card)
+                if card.suit == "diamonds":
+                    positions.append(card)
+        return positions
+
+    #Doit ben avoir moyen de simplifier ça? m'semble ça fait du self.cards en esti dans même phrase
+    def findPairs(self):
+        pairs = []
+        for card in self.cards[:-1] :
+            if card.value == self.cards[self.cards.index(card)+1].value:
+                pairs.append({f"{card.value} of {card.suit} and {self.cards[self.cards.index(card)+1].suit}": self.cards.index(card)+1})
+        return pairs
+    
+    #Doit ben avoir moyen de simplifier ça? m'semble ça fait du self.cards en esti dans même phrase
+    def findThreeOfAKind(self):
+        threes = []
+        for card in self.cards[:-2] :
+            if card.value == self.cards[self.cards.index(card)+1].value and card.value == self.cards[self.cards.index(card)+2].value:
+                threes.append({f"{card.value} of {card.suit}, {self.cards[self.cards.index(card)+1].suit} and {self.cards[self.cards.index(card)+2].suit}": self.cards.index(card)+1})
+        return threes
 
     def __repr__(self) -> str:
       deck = ""
+      i=1
       for card in self.cards:
-        deck += repr(card) + "\n"
+        deck += f"{i}: " + repr(card) + "\n"
+        i += 1
 
       return deck
 
@@ -81,18 +134,64 @@ def buildDeckFromFile(filePath: str) -> Deck:
     
     cards = []
     for card in data:
-      value, suite = card.split(":")
+      value, suit = card.split(":")
 
-      cards.append(Card(suite, value))
+      cards.append(Card(suit, value))
     
     return Deck(cards)
 filePath = "mnemonica.txt"
 deck = buildDeckFromFile(filePath)
 
-#coupe 10 cartes
-deck.cutCards(10)
-#fait un melange faro
-deck.faro()
-#distribue 6 cartes en 3 paquets
-packets = deck.dealIntoPiles(6,3)
-print(packets[0])
+
+
+######################################################### COMPARING CARDS ################################################
+#comparator 1 (not working)
+if deck.cards[0] == Card("clubs","4"):
+    print("C1: yes")
+else:
+    print("C1: no")
+#comparator 1.1 (not working)
+if deck.cards[0] is Card("clubs","4"):
+    print("C1.1: yes")
+else:
+    print("C1.1: no")
+
+#comparator 2 (not working)
+guess = Card("clubs","4")
+
+if deck.cards[0] == guess:
+    print("C2: yes")
+else:
+    print("C2: no")
+#comparator 2.2 (not working)
+
+if deck.cards[0] is guess:
+    print("C2.2: yes")
+else:
+    print("C2.2: no")
+
+#comparator 3 (works)
+
+if deck.cards[0].suit == guess.suit and deck.cards[0].value == guess.value:
+    print("C3: yes")
+else:
+    print("C3: no")
+#comparator 3.3 
+if deck.cards[0].suit == "clubs" and deck.cards[0].value == "4":
+    print("C3.1: yes")
+else:
+    print("C3.1: no")
+
+
+#I tried both "is" and "==", can't seem to be able to compare "identical" objects without going through their attributes one by one
+
+######################################################### // COMPARING CARDS ################################################
+# print(deck.findFourOfAKindPositions("4"))
+# print(deck.findSuitPositions("hearts"))
+
+
+deck.shuffle()
+print(deck)
+print(deck.findPairs())
+print(deck.findThreeOfAKind())
+print(deck.locateAllColor("red"))
