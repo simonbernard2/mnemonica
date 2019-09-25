@@ -193,4 +193,4 @@ deck.shuffle()
 print(deck)
 print(deck.findPairs())
 print(deck.findThreeOfAKind())
-print(deck.locateAllColor("red"))
+
