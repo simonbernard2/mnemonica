@@ -7,6 +7,10 @@ import inspect
 from collections import Counter
 
 
+#lire sur map et filter
+
+#remplacer str par enums(value: string/int)(suit: color/suit)
+# __eq__ to compare cards with one another
 class Card:
     def __init__(self, suit: str, value: str) -> None:
         self.suit = suit
@@ -19,6 +23,8 @@ class Card:
     #     if not isinstance(other, Card):
     #     # don't attempt to compare against unrelated types
     #      return NotImplemented
+
+
 
 class Deck:
     def __init__(self, cards: List[Card]) -> None:
@@ -89,12 +95,19 @@ class Deck:
         return positions
 
     #Doit ben avoir moyen de simplifier ça? m'semble ça fait du self.cards en esti dans même phrase
+    #refere a findMazine
     def findPairs(self):
         pairs = []
         for card in self.cards[:-1] :
             if card.value == self.cards[self.cards.index(card)+1].value:
                 pairs.append({f"{card.value} of {card.suit} and {self.cards[self.cards.index(card)+1].suit}": self.cards.index(card)+1})
         return pairs
+
+    def findMazine(self):
+        pairs = []
+        for i in range(0,len(self.cards)-1):
+            if self.cards[i].value == self.cards[i+1].value:
+                return 0
     
     #Doit ben avoir moyen de simplifier ça? m'semble ça fait du self.cards en esti dans même phrase
     def findThreeOfAKind(self):
@@ -106,10 +119,10 @@ class Deck:
 
     def __repr__(self) -> str:
       deck = ""
-      i=1
+      position=1
       for card in self.cards:
-        deck += f"{i}: " + repr(card) + "\n"
-        i += 1
+        deck += f"{position}: " + repr(card) + "\n"
+        position += 1
 
       return deck
 
@@ -186,12 +199,6 @@ else:
 #I tried both "is" and "==", can't seem to be able to compare "identical" objects without going through their attributes one by one
 
 ######################################################### // COMPARING CARDS ################################################
-# print(deck.findFourOfAKindPositions("4"))
-# print(deck.findSuitPositions("hearts"))
 
 
-deck.shuffle()
-print(deck)
-print(deck.findPairs())
-print(deck.findThreeOfAKind())
-print(deck.locateAllColor("red"))
+
