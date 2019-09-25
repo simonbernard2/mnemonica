@@ -64,21 +64,21 @@ class Deck:
                 pile.append(self.cards.pop(0))
         return piles
     
-    def findFourOfAKindPositions(self,value:str):
+    def findMates(self,value:str):
         positions = []
         for card in self.cards:
             if value == card.value:
                 positions.append(card)
         return positions
 
-    def locateAllSuit(self, suit:str):
+    def findSuit(self, suit:str):
         positions = []
         for card in self.cards:
             if suit == card.suit:
                 positions.append(card)
         return positions
 
-    def locateAllColor(self, color:str):
+    def findColor(self, color:str):
         positions = []
         if color == "red":
             for card in self.cards:
@@ -201,4 +201,11 @@ else:
 ######################################################### // COMPARING CARDS ################################################
 
 
+
+
+
+deck.shuffle()
+print(deck)
+print(deck.findPairs())
+print(deck.findThreeOfAKind())
 
