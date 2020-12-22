@@ -104,7 +104,7 @@ class Deck:
         for card in self.cards:
             if card.color == color:
                 card_tuple = (card, self.cards.index(card) + 1)
-                positions.append(card)
+                positions.append(card_tuple)
         return positions
 
     def find_pairs(self):
