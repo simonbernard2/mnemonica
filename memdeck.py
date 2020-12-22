@@ -83,24 +83,27 @@ class Deck:
     # =====================================================================
     # LOCATION METHODS
     # =====================================================================
-    def locate_card_by_value(self, value: str):
-        positions = []
+    def locate_card_by_value(self, value: str) -> [tuple]:
+        cards = []
         for card in self.cards:
             if value == card.value:
-                positions.append(card)
-        return positions
+                card_tuple = (card, self.cards.index(card) + 1)
+                cards.append(card_tuple)
+        return cards
 
-    def locate_card_by_suit(self, suit: str) -> [Card]:
-        positions = []
+    def locate_card_by_suit(self, suit: str) -> [tuple]:
+        cards = []
         for card in self.cards:
             if suit == card.suit:
-                positions.append(card)
-        return positions
+                card_tuple = (card, self.cards.index(card) + 1)
+                cards.append(card_tuple)
+        return cards
 
-    def locate_cards_by_color(self, color: str) -> [Card]:
+    def locate_cards_by_color(self, color: str) -> [tuple]:
         positions = []
         for card in self.cards:
             if card.color == color:
+                card_tuple = (card, self.cards.index(card) + 1)
                 positions.append(card)
         return positions
 
@@ -158,4 +161,5 @@ def build_deck_from_file(filePath: str) -> Deck:
 
 filePath = "mnemonica.txt"
 deck = build_deck_from_file(filePath)
-print(deck.find_color('black'))
+deck.faro()
+print(deck.locate_card_by_suit('C'))
