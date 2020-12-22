@@ -2,41 +2,50 @@ import random
 import itertools
 from typing import List
 from termcolor import colored, cprint
-import inspect
-from collections import Counter
 
 
-# __eq__ to compare cards with one another
 class Card:
     def __init__(self, suit: str, value: str) -> None:
-        self.suit = suit
         self.value = value
+        self.suit = suit
+        color = ""
+        black_suits = ["C", "S"]
+        red_suits = ["H", "D"]
+        if suit in black_suits:
+            color = "black"
+        elif suit in red_suits:
+            color = "red"
+        self.color = color
 
     def __repr__(self) -> str:
-        if self.suit == 'spades':
+        if self.suit == 'spades' or self.suit == 'S':
             suit = '♠'
             return colored(f"{self.value}{suit}", 'blue')
-        if self.suit == 'clubs':
+        if self.suit == 'clubs' or self.suit == 'C':
             suit = '♣'
             return colored(f"{self.value}{suit}", 'green')
-        if self.suit == 'hearts':
+        if self.suit == 'hearts' or self.suit == 'H':
             suit = '♥'
             return colored(f"{self.value}{suit}", 'red')
-        if self.suit == 'diamonds':
+        if self.suit == 'diamonds' or self.suit == 'D':
             suit = '♦'
             return colored(f"{self.value}{suit}", 'magenta')
 
     def __eq__(self, other):
         if not isinstance(other, Card):
-            # don't attempt to compare against unrelated types
             return NotImplemented
         return self.suit == other.suit and self.value == other.value
 
+
+# ================================================================================================
 
 class Deck:
     def __init__(self, cards: List[Card]) -> None:
         self.cards = cards
 
+    # =====================================================================
+    # STACK ALTERATION METHODS
+    # =====================================================================
     def shuffle(self) -> "deck":
         random.shuffle(self.cards)
 
@@ -71,38 +80,30 @@ class Deck:
                 pile.append(self.cards.pop(0))
         return piles
 
-    def find_mates(self, value: str):
+    # =====================================================================
+    # LOCATION METHODS
+    # =====================================================================
+    def locate_card_by_value(self, value: str):
         positions = []
         for card in self.cards:
             if value == card.value:
                 positions.append(card)
         return positions
 
-    def find_suit(self, suit: str):
+    def locate_card_by_suit(self, suit: str) -> [Card]:
         positions = []
         for card in self.cards:
             if suit == card.suit:
                 positions.append(card)
         return positions
 
-    def find_color(self, color: str):
+    def locate_cards_by_color(self, color: str) -> [Card]:
         positions = []
-        if color == "red":
-            for card in self.cards:
-                if card.suit == "hearts":
-                    positions.append(card)
-                if card.suit == "diamonds":
-                    positions.append(card)
-        if color == "black":
-            for card in self.cards:
-                if card.suit == "spades":
-                    positions.append(card)
-                if card.suit == "clubs":
-                    positions.append(card)
+        for card in self.cards:
+            if card.color == color:
+                positions.append(card)
         return positions
 
-    # Doit ben avoir moyen de simplifier ça? m'semble ça fait du self.cards en esti dans même phrase
-    # refere a findMazine
     def find_pairs(self):
         pairs = []
         for card in self.cards[:-1]:
@@ -112,12 +113,6 @@ class Deck:
                         card) + 1})
         return pairs
 
-    def findMazine(self):
-        for i in range(0, len(self.cards) - 1):
-            if self.cards[i].value == self.cards[i + 1].value:
-                return 0
-
-    # Doit ben avoir moyen de simplifier ça? m'semble ça fait du self.cards en esti dans même phrase
     def find_threes_of_a_kind(self):
         threes = []
         for card in self.cards[:-2]:
@@ -128,6 +123,9 @@ class Deck:
                 threes.append([card, self.cards[card_index + 1], self.cards[card_index + 2]])
         return threes
 
+    # =====================================================================
+    # "PYTHON"? METHODS
+    # =====================================================================
     def __repr__(self) -> str:
         deck = ""
         position = 1
@@ -137,19 +135,13 @@ class Deck:
             position += 1
         return deck
 
-    def __len__(self) -> str:
+    def __getitem__(self, index) -> Card:
+        return self.cards[index - 1]
+
+    def __len__(self) -> int:
         return len(self.cards)
 
-
-class Player:
-    def __init__(self):
-        self.hand = []
-
-    def draw(self, deck, number):
-        for i in range(number):
-            card = deck.deal()
-            self.hand.append(card)
-        return
+    # ================================================================================================
 
 
 def build_deck_from_file(filePath: str) -> Deck:
@@ -166,15 +158,4 @@ def build_deck_from_file(filePath: str) -> Deck:
 
 filePath = "mnemonica.txt"
 deck = build_deck_from_file(filePath)
-
-card = Card('spades', '5')
-#
-# user_input = int(input(f"Veuillez inscrire un chiffre entre 1 et 52: "))
-# while user_input not in range(1,52):
-#     user_input = int(input(f"Veuillez inscrire un chiffre entre 1 et 52: "))
-# print(deck.cards[user_input-1]
-
-print(card)
-print(deck.cards[15])
-print(card == deck.cards[15])
-print(card.suit, deck.cards[15].suit)
+print(deck.find_color('black'))
