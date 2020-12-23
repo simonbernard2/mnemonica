@@ -1,0 +1,12 @@
+*
+
+!.gitignore
+!README.md
+!requirements.txt
+!setup.py
+
+!mnemonica
+!mnemonica/**
+
+!resources/
+!resources/**

@@ -1,0 +1,24 @@
+{
+  "values": {
+    "A": "AS",
+    "2": "DEUX",
+    "3": "TROIS",
+    "4": "QUATRE",
+    "5": "CINQ",
+    "6": "SIX",
+    "7": "SEPT",
+    "8": "HUIT",
+    "9": "NEUF",
+    "10": "DIX",
+    "J": "VALET",
+    "Q": "DAME",
+    "K": "ROI"
+  },
+  "suits": {
+    "C" : "TREFLE",
+    "H" : "COEUR",
+    "S" : "PIQUE",
+    "D" : "CARREAU"
+  },
+  "pronoun":"DE"
+}

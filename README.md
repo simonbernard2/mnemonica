@@ -1,1 +1,5 @@
 # mnemonica
+
+`
+pip install -e .
+`
