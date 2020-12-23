@@ -2,32 +2,47 @@ import random
 import itertools
 from typing import List
 from termcolor import colored, cprint
+import json
+
+filePath = "mnemonica.txt"
+dictionary_path = "fr.json"
 
 
 class Card:
     def __init__(self, suit: str, value: str) -> None:
         self.value = value
         self.suit = suit
-        color = ""
-        black_suits = ["C", "S"]
-        red_suits = ["H", "D"]
+
+        black_suits = ["C", "S", "clubs", "spades"]
+        red_suits = ["H", "D", "hearts", "diamonds"]
         if suit in black_suits:
-            color = "black"
+            self.color = "black"
         elif suit in red_suits:
-            color = "red"
-        self.color = color
+            self.color = "red"
+
+    def spell(self):
+        with open(dictionary_path) as json_file:
+            json_file = json.load(json_file)
+            json_values = json_file["values"]
+            json_suits = json_values["suits"]
+
+            card_value = json_values[self.value]
+            card_suit = json_suits[self.suit]
+
+            spell_outs = [f"{card_value}{card_suit}", f"{card_value} {card_suit}"]
+            return spell_outs
 
     def __repr__(self) -> str:
-        if self.suit == 'spades' or self.suit == 'S':
+        if self.suit in ["spades", "S"]:
             suit = '♠'
             return colored(f"{self.value}{suit}", 'blue')
-        if self.suit == 'clubs' or self.suit == 'C':
+        if self.suit in ["clubs", "C"]:
             suit = '♣'
             return colored(f"{self.value}{suit}", 'green')
-        if self.suit == 'hearts' or self.suit == 'H':
+        if self.suit in ["hearts", "H"]:
             suit = '♥'
             return colored(f"{self.value}{suit}", 'red')
-        if self.suit == 'diamonds' or self.suit == 'D':
+        if self.suit in ["diamonds", "D"]:
             suit = '♦'
             return colored(f"{self.value}{suit}", 'magenta')
 
@@ -133,8 +148,8 @@ class Deck:
         deck = ""
         position = 1
         for card in self.cards:
-            deck += f"{repr(card)} \n"
-            # deck += f"{position}: {repr(card)} \n"
+            # deck += f"{repr(card)} \n"
+            deck += f"{position}: {repr(card)} \n"
             position += 1
         return deck
 
@@ -159,7 +174,38 @@ def build_deck_from_file(filePath: str) -> Deck:
     return Deck(cards)
 
 
-filePath = "mnemonica.txt"
+def get_spelling_outs(cards):
+    dictionary_path = "fr.json"
+    with open(dictionary_path) as json_file:
+        data = json.load(json_file)
+        values = data["values"]
+        suits = data["suits"]
+        for card in cards:
+            card_index = cards.index(card) + 1
+            card_value_in_letters = values[card.value]
+            card_suit_in_letters = suits[card.suit]
+            card_letters = len(card_suit_in_letters) + len(card_value_in_letters)
+            card_letters_with_pronoun = card_letters + 2
+            if card_index == card_letters:
+                print(f"{card} {card_value_in_letters} {card_suit_in_letters} (on)")
+                break
+            if card_index == card_letters_with_pronoun:
+                print(f"{card} {card_value_in_letters} DE {card_suit_in_letters} (on)")
+            if card_index == card_letters + 1:
+                print(f"{card} {card_value_in_letters} {card_suit_in_letters} (next)")
+            if card_index == card_letters_with_pronoun + 1:
+                print(f"{card} {card_value_in_letters} DE {card_suit_in_letters} (next)")
+
+            if card_index == card_letters + 2:
+                print(f"{card} {card_value_in_letters} {card_suit_in_letters} (double)")
+            if card_index == card_letters_with_pronoun + 2:
+                print(f"{card} {card_value_in_letters} DE {card_suit_in_letters} (double)")
+
+
 deck = build_deck_from_file(filePath)
-deck.faro()
-print(deck.locate_card_by_suit('C'))
+print(deck)
+# for _ in range(8):
+#     print(".........................")
+#     get_spelling_outs(deck.cards)
+#     deck.faro()
+# get_spelling_outs(deck.cards)
