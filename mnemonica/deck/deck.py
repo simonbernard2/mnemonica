@@ -1,7 +1,7 @@
 import random
 import itertools
 from typing import List, Tuple
-from mnemonica.deck.findings import PairFound, ThreeOfAKindFound, FourOfAKindFound, FlushFound
+from mnemonica.deck.findings import PairFound, ThreeOfAKindFound, FourOfAKindFound, FlushFound, StraightFound
 from mnemonica.deck.card import Card, Suits
 
 
@@ -147,6 +147,14 @@ class Deck:
                 candidate = [card]
 
         return flushes
+
+    def find_straights(self, minium_amount: int = 3) -> List[StraightFound]:
+        straights = []
+        candidate_index = 0
+        candidate = [self.cards[0]]
+
+        return straights
+
 
     def copy(self) -> 'Deck':
         return Deck(self.cards.copy())

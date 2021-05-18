@@ -1,6 +1,6 @@
 import unittest
 from mnemonica.deck.deck import Deck
-from mnemonica.deck.card import Card, Suit, Suits
+from mnemonica.deck.card import Card, Suit, Suits, Values
 
 
 class TestDeck(unittest.TestCase):
@@ -10,7 +10,7 @@ class TestDeck(unittest.TestCase):
         self.assertTrue(deck.is_empty())
 
     def test_is_empty_false(self) -> None:
-        deck = Deck([Card(Suits.HEARTS, "4")])
+        deck = Deck([Card(Values.FOUR, Suits.HEARTS)])
 
         self.assertFalse(deck.is_empty())
 
@@ -42,6 +42,4 @@ class TestDeck(unittest.TestCase):
         self.assertFalse(original == shuffled)
 
     def _all_suit_deck(self, suit: Suit) -> Deck:
-        values = ["A"] + [str(i) for i in range(2, 11)] + ["J", "Q", "K"]
-
-        return Deck([Card(suit, v) for v in values])
+        return Deck([Card(v, suit) for v in Values.in_order()])
