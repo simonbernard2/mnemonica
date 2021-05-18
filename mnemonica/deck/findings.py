@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 from mnemonica.deck.card import Card
 
 
@@ -31,3 +31,13 @@ class FourOfAKindFound:
                 f"{self.found[1]}, "
                 f"{self.found[2]}, "
                 f"{self.found[3]}")
+
+
+class FlushFound:
+    def __init__(self, suit: str, pos: int, found: List) -> None:
+        self.suit = suit
+        self.pos = pos
+        self.found = found
+
+    def __repr__(self) -> str:
+        return f"[Flush found] At pos [{self.pos + 1} {self.found}"

@@ -73,6 +73,9 @@ class Card:
     def has_same_value(self, other: 'Card') -> bool:
         return self.value == other.value
 
+    def has_same_suit(self, other: 'Card') -> bool:
+        return self.suit == other.suit
+
     def __hash__(self) -> int:
         return hash(f"{self.value}-{self.suit.icon()}")
 

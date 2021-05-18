@@ -1,8 +1,8 @@
 import random
 import itertools
 from typing import List, Tuple
-from mnemonica.deck.findings import PairFound, ThreeOfAKindFound, FourOfAKindFound
-from mnemonica.deck.card import Card
+from mnemonica.deck.findings import PairFound, ThreeOfAKindFound, FourOfAKindFound, FlushFound
+from mnemonica.deck.card import Card, Suit, Clubs, Hearts, Spades, Diamonds
 
 
 class Deck:
@@ -45,16 +45,33 @@ class Deck:
     def reassemble_left_to_right_on_top(self, piles: List['Deck']) -> None:
         assembled = []
         for pile in piles:
-            assembled += pile
+            assembled += pile.cards
 
         self.cards = assembled + self.cards
 
     def reassemble_left_to_right_on_bottom(self, piles: List['Deck']) -> None:
         assembled = []
         for pile in piles:
-            assembled += pile
+            assembled += pile.cards
 
         self.cards += self.cards
+
+    def riffle_shuffle(self, deck: 'Deck') -> 'Deck':
+        assembled = []
+        random_value = random.randint(1, 2)
+        first_half = self.cards if random_value == 1 else deck.cards
+        second_half = self.cards if random_value == 2 else deck.cards
+        while len(first_half) > 0 or len(second_half) > 0:
+            random_value = random.randint(1, 5)
+            assembled += first_half[0:random_value]
+            first_half = first_half[random_value:]
+
+            random_value = random.randint(1, 5)
+            assembled += second_half[0:random_value]
+            second_half = second_half[random_value:]
+
+        self.cards = assembled
+        return self
 
     def locate_card_by_value(self, value: str) -> List[Tuple[Card, int]]:
         cards = []
@@ -110,6 +127,30 @@ class Deck:
                 fours.append(FourOfAKindFound(i, (card, next_card, second_to_next_card, third_to_next_card)))
 
         return fours
+
+    def find_flush(self, suit: str, minimum_amount: int) -> List[FlushFound]:
+        flush: List[FlushFound] = []
+        for i, card in enumerate(self.cards):
+            if card.suit != suit:
+                continue
+
+            position = i+1
+            count = 1
+            temp_flush = [card]
+            if position > len(self.cards)-2:
+                break
+            print (position)
+            next_card = self.cards[i + position]
+            while card.has_same_suit(next_card) in enumerate(self.cards):
+                count += 1
+                temp_flush.append(next_card)
+                next_card = self.cards[i + position]
+
+            if len(temp_flush) > len(flush) and len(temp_flush) > minimum_amount:
+                position = i
+                flush.append(FlushFound(suit, position, temp_flush))
+
+        return flush
 
     def copy(self) -> 'Deck':
         return Deck(self.cards.copy())
