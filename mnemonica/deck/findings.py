@@ -41,6 +41,7 @@ class FlushFound:
     def __repr__(self) -> str:
         return f"[Flush found] At pos [{self.pos + 1}], {self.found}"
 
+
 class StraightFound:
     def __init__(self, pos: int, found: List[Card]) -> None:
         self.pos = pos

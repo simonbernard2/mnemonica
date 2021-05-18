@@ -1,3 +1,4 @@
+from typing import List
 from enum import Enum
 
 
@@ -65,6 +66,10 @@ class Suits:
     SPADES = Suit("♠", "blue")
     HEARTS = Suit("♥", "red")
     DIAMONDS = Suit("♦", "magenta")
+
+    @classmethod
+    def american_order(cls) -> List[Suit]:
+        return [cls.CLUBS, cls.HEARTS, cls.SPADES, cls.DIAMONDS]
 
 
 class Color(Enum):
