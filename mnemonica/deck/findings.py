@@ -34,10 +34,9 @@ class FourOfAKindFound:
 
 
 class FlushFound:
-    def __init__(self, suit: str, pos: int, found: List) -> None:
-        self.suit = suit
+    def __init__(self, pos: int, found: List[Card]) -> None:
         self.pos = pos
         self.found = found
 
     def __repr__(self) -> str:
-        return f"[Flush found] At pos [{self.pos + 1} {self.found}"
+        return f"[Flush found] At pos [{self.pos + 1}], {self.found}"

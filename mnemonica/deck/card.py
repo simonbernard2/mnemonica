@@ -1,47 +1,17 @@
-import abc
 from enum import Enum
 
 
-class Suit(metaclass=abc.ABCMeta):
-    @abc.abstractmethod
-    def icon(self) -> str:
-        pass
-
-    @abc.abstractmethod
-    def color(self) -> str:
-        pass
+class Suit:
+    def __init__(self, icon: str, color: str) -> None:
+        self.icon = icon
+        self.color = color
 
 
-class Clubs(Suit):
-    def icon(self) -> str:
-        return "♣"
-
-    def color(self) -> str:
-        return "green"
-
-
-class Spades(Suit):
-    def icon(self) -> str:
-        return "♠"
-
-    def color(self) -> str:
-        return "blue"
-
-
-class Hearts(Suit):
-    def icon(self) -> str:
-        return "♥"
-
-    def color(self) -> str:
-        return "red"
-
-
-class Diamonds(Suit):
-    def icon(self) -> str:
-        return "♦"
-
-    def color(self) -> str:
-        return "magenta"
+class Suits:
+    CLUBS = Suit("♣", "green")
+    SPADES = Suit("♠", "blue")
+    HEARTS = Suit("♥", "red")
+    DIAMONDS = Suit("♦", "magenta")
 
 
 class Color(Enum):
@@ -55,20 +25,8 @@ class Card:
         self.suit = suit
 
         self.color = Color.RED
-        if isinstance(suit, (Clubs, Spades)):
+        if suit in (Suits.CLUBS, Suits.SPADES):
             self.color = Color.BLACK
-
-    # def spell(self):
-    #     with open(dictionary_path) as json_file:
-    #         json_file = json.load(json_file)
-    #         json_values = json_file["values"]
-    #         json_suits = json_values["suits"]
-    #
-    #         card_value = json_values[self.value]
-    #         card_suit = json_suits[self.suit]
-    #
-    #         spell_outs = [f"{card_value}{card_suit}", f"{card_value} {card_suit}"]
-    #         return spell_outs
 
     def has_same_value(self, other: 'Card') -> bool:
         return self.value == other.value
@@ -77,10 +35,10 @@ class Card:
         return self.suit == other.suit
 
     def __hash__(self) -> int:
-        return hash(f"{self.value}-{self.suit.icon()}")
+        return hash(f"{self.value}-{self.suit.icon}")
 
     def __repr__(self) -> str:
-        return f"{self.value}{self.suit.icon()}"
+        return f"{self.value}{self.suit.icon}"
 
     def __eq__(self, other: any) -> bool:
         if not isinstance(other, Card):

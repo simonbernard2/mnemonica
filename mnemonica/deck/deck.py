@@ -2,12 +2,15 @@ import random
 import itertools
 from typing import List, Tuple
 from mnemonica.deck.findings import PairFound, ThreeOfAKindFound, FourOfAKindFound, FlushFound
-from mnemonica.deck.card import Card, Suit, Clubs, Hearts, Spades, Diamonds
+from mnemonica.deck.card import Card, Suits
 
 
 class Deck:
     def __init__(self, cards: List[Card]) -> None:
         self.cards = cards
+
+    def is_empty(self) -> bool:
+        return len(self.cards) == 0
 
     def shuffle(self) -> None:
         random.shuffle(self.cards)
@@ -58,17 +61,16 @@ class Deck:
 
     def riffle_shuffle(self, deck: 'Deck') -> 'Deck':
         assembled = []
-        random_value = random.randint(1, 2)
-        first_half = self.cards if random_value == 1 else deck.cards
-        second_half = self.cards if random_value == 2 else deck.cards
-        while len(first_half) > 0 or len(second_half) > 0:
+        first, second = random.sample([self, deck], 2)
+        # TODO: test with random.randint = 1; riffle_shuffle == faro_shuffle
+        while not (first.is_empty() and second.is_empty()):
             random_value = random.randint(1, 5)
-            assembled += first_half[0:random_value]
-            first_half = first_half[random_value:]
+            assembled += first.cards[:random_value]
+            first.cards = first.cards[random_value:]
 
             random_value = random.randint(1, 5)
-            assembled += second_half[0:random_value]
-            second_half = second_half[random_value:]
+            assembled += second.cards[:random_value]
+            second.cards = second.cards[random_value:]
 
         self.cards = assembled
         return self
@@ -128,29 +130,23 @@ class Deck:
 
         return fours
 
-    def find_flush(self, suit: str, minimum_amount: int) -> List[FlushFound]:
-        flush: List[FlushFound] = []
-        for i, card in enumerate(self.cards):
-            if card.suit != suit:
-                continue
+    def find_flushes(self, minimum_amount: int = 2) -> List[FlushFound]:
+        flushes = []
 
-            position = i+1
-            count = 1
-            temp_flush = [card]
-            if position > len(self.cards)-2:
-                break
-            print (position)
-            next_card = self.cards[i + position]
-            while card.has_same_suit(next_card) in enumerate(self.cards):
-                count += 1
-                temp_flush.append(next_card)
-                next_card = self.cards[i + position]
+        candidate_index = 0
+        candidate = [self.cards[0]]
+        for i, card in enumerate(self.cards[1:]):
+            if card.has_same_suit(candidate[0]):
+                candidate.append(card)
+            else:
+                if len(candidate) >= minimum_amount:
+                    flushes.append(FlushFound(candidate_index, candidate))
 
-            if len(temp_flush) > len(flush) and len(temp_flush) > minimum_amount:
-                position = i
-                flush.append(FlushFound(suit, position, temp_flush))
+                # i is relative to self.cards[1:] but we want the representation from self.cards
+                candidate_index = i + 1
+                candidate = [card]
 
-        return flush
+        return flushes
 
     def copy(self) -> 'Deck':
         return Deck(self.cards.copy())

@@ -1,6 +1,6 @@
 from mnemonica.deck.deck import Deck
 from mnemonica.deck.card import (
-    Card, Suit, Clubs, Spades, Hearts, Diamonds
+    Card, Suit, Suits
 )
 
 
@@ -22,10 +22,10 @@ class DeckRepo:
 
     def _suit_from_string(self, s: str) -> Suit:
         d = {
-            "C": Clubs(),
-            "S": Spades(),
-            "H": Hearts(),
-            "D": Diamonds()
+            "C": Suits.CLUBS,
+            "S": Suits.SPADES,
+            "H": Suits.HEARTS,
+            "D": Suits.DIAMONDS,
         }
 
         if s not in d:
