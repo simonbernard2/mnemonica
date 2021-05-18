@@ -68,3 +68,16 @@ class TestDeck(unittest.TestCase):
         actual = deck.find_flushes(5)
 
         self.assertEqual(f"{expected}", f"{actual}")
+
+    def test_find_flushes(self) -> None:
+        first_flush = "7S 9S AS KS"
+        second_flush = "4D 6D 9D KD 10D JD"
+        deck = F.from_string(f"2C 5C {first_flush} 3D 8H {second_flush} 6S 9H")
+        expected = [
+            FlushFound(2, F.from_string(first_flush).cards),
+            FlushFound(8, F.from_string(second_flush).cards)
+        ]
+
+        actual = deck.find_flushes(4)
+
+        self.assertEqual(f"{expected}", f"{actual}")

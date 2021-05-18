@@ -55,10 +55,32 @@ class Values:
     QUEEN = Value(12)
     KING = Value(13)
 
+    __CHAR_TO_VALUE = {
+        "A": ACE,
+        "J": JACK,
+        "Q": QUEEN,
+        "K": KING
+    }
+
     @classmethod
-    def in_order(cls):
+    def in_order(cls) -> List[Value]:
         return [cls.ACE, cls.TWO, cls.THREE, cls.FOUR, cls.FIVE, cls.SIX, cls.SEVEN, cls.EIGHT, cls.NINE, cls.TEN,
                 cls.JACK, cls.QUEEN, cls.KING]
+
+    @classmethod
+    def from_int(cls, value: int) -> Value:
+        return cls.in_order()[value + 1]
+
+    @classmethod
+    def from_string(cls, value: str) -> Value:
+        value = value.upper()
+        if value.isnumeric():
+            return cls.from_int(int(value))
+
+        if value not in cls.__CHAR_TO_VALUE:
+            raise RuntimeError(f"[Values.from_string({value}] not in {cls.__CHAR_TO_VALUE}")
+
+        return cls.__CHAR_TO_VALUE[value]
 
 
 class Suits:
@@ -67,9 +89,24 @@ class Suits:
     HEARTS = Suit("♥", "red")
     DIAMONDS = Suit("♦", "magenta")
 
+    __CHAR_TO_SUIT = {
+        "C": CLUBS,
+        "S": SPADES,
+        "H": HEARTS,
+        "D": DIAMONDS
+    }
+
     @classmethod
     def american_order(cls) -> List[Suit]:
         return [cls.CLUBS, cls.HEARTS, cls.SPADES, cls.DIAMONDS]
+
+    @classmethod
+    def from_string(cls, value: str) -> Suit:
+        value = value.upper()
+        if value not in cls.__CHAR_TO_SUIT:
+            raise RuntimeError(f"[Suits.from_string({value}] not in {cls.__CHAR_TO_SUIT}")
+
+        return cls.__CHAR_TO_SUIT[value]
 
 
 class Color(Enum):
