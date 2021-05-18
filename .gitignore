@@ -12,4 +12,7 @@
 !resources/
 !resources/**
 
+!tests/
+!tests/**
+
 *.pyc
