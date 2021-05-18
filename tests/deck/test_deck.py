@@ -69,7 +69,7 @@ class TestDeck(unittest.TestCase):
 
         self.assertEqual(f"{expected}", f"{actual}")
 
-    def test_find_flushes(self) -> None:
+    def test_find_more_flushes(self) -> None:
         first_flush = "7S 9S AS KS"
         second_flush = "4D 6D 9D KD 10D JD"
         deck = F.from_string(f"2C 5C {first_flush} 3D 8H {second_flush} 6S 9H")
