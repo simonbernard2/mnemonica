@@ -151,6 +151,12 @@ class Deck:
     def copy(self) -> 'Deck':
         return Deck(self.cards.copy())
 
+    def __eq__(self, other: 'Deck') -> bool:
+        if not isinstance(other, Deck):
+            return False
+
+        return other.cards == self.cards
+
     def __repr__(self) -> str:
         deck = ""
         position = 1
