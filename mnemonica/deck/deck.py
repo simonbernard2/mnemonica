@@ -16,21 +16,44 @@ class Deck:
         random.shuffle(self.cards)
 
     def deal(self) -> Card:
+        # FIXME: not working when trying to cull a "card = deck.deal()", but it works when "card = self.cards[index]"
         return self.cards.pop(0)
 
     def bottom_deal(self) -> Card:
+        # FIXME: like mentioned before
         return self.cards.pop()
 
-    def faro(self) -> None:
-        top_half = self.cards[:-26]
-        bottom_half = self.cards[26:]
+    def faro(self, other: 'Deck' = None, in_faro=False) -> 'Deck':
+        # TODO: settling on which half is which, and stick to this kind of logic all around
+        # TODO: rethinking methods where two packets are involved(riffles, comparisons, etc.)...
+        # ... and considering cases where it could be done to itself via a cut for instance
+        if other:
+            top_half, bottom_half = other.cards, self.cards
+        else:
+            # TODO: considering faros with non 52-cards decks
+            top_half = self.cards[:-26]
+            bottom_half = self.cards[26:]
+        if in_faro:
+            # TODO: is this the simplest way to switch variables for one another?
+            top_half, bottom_half = bottom_half, top_half
         self.cards = list(itertools.chain(*zip(top_half, bottom_half)))
+        return self
+
+    # TODO: faro a smaller packet inside a bigger one
+    # def straddle_faro(self, other: 'Deck' = None) -> 'Deck':
+    #     pass
 
     def cut_cards(self, number: int) -> 'Deck':
         cut = self.cards[:number]
         self.cards = self.cards[number:]
 
         return Deck(cut)
+
+    def cull_card(self, card: 'Card', index: int) -> 'Deck':
+        card_index = self.cards.index(card)
+        card = self.cards.pop(card_index)
+        self.cards.insert(index, card)
+        return self
 
     def complete_cut(self, number: int) -> None:
         cut = self.cards[:number]
@@ -151,12 +174,16 @@ class Deck:
 
         return flushes
 
-    def find_straights(self, minium_amount: int = 3) -> List[StraightFound]:
+    def find_straights(self, minium_amount: int = 2) -> List[StraightFound]:
         straights = []
         candidate_index = 0
         candidate = [self.cards[0]]
 
         return straights
+
+    def is_a_flush(self) -> bool:
+        suit = self.cards[0].suit
+        return all(card.suit == suit for card in self.cards)
 
     def copy(self) -> 'Deck':
         return Deck(self.cards.copy())

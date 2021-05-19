@@ -1,21 +1,22 @@
 from mnemonica.deck.deck import Deck
 from mnemonica.repo.deck_repo import DeckRepo
 from mnemonica.events.events import Events
-from mnemonica.deck.card import Suits
 from pprint import PrettyPrinter
 
 pp = PrettyPrinter()
 
-dr = DeckRepo("resources/mnemonica.txt")
+# dr = DeckRepo("resources/mnemonica.txt")
+dr = DeckRepo("resources/aceToKing.txt")
 deck: Deck = dr.load()
+#
+# card = deck.cards[51]
+#
+# deck.cull_card(card,1)
 
-#print(deck.cards)
-#half = deck.cut_cards(25)
-#deck.riffle_shuffle(half)
-#print(len(deck.cards))
-#print(deck.cards)
-deck.faro()
-print(deck.find_flushes(2))
+hand = deck.cut_cards(5)
+
+print(hand)
+print(hand.is_a_flush())
 
 # for _ in range(10):
 #     d = deck.copy()

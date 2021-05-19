@@ -69,6 +69,14 @@ class TestDeck(unittest.TestCase):
 
         self.assertEqual(f"{expected}", f"{actual}")
 
+    def test_is_a_flush(self) -> None:
+        deck = F.new_deck()
+        hand = deck.cut_cards(5)
+        expected = True
+        actual = hand.is_a_flush()
+
+        self.assertEqual(f"{expected}", f"{actual}")
+
     def test_find_more_flushes(self) -> None:
         first_flush = "7S 9S AS KS"
         second_flush = "4D 6D 9D KD 10D JD"
