@@ -16,7 +16,7 @@ class DeckRepo:
         for card in data:
             value, suit_str = card.split(":")
             suit = self._suit_from_string(suit_str)
-            cards.append(Card(suit, value))
+            cards.append(Card(value, suit))
 
         return Deck(cards)
 
